@@ -57,4 +57,5 @@ object InputHandler {
     val A = Input.Keys.A
     val S = Input.Keys.S
     val D = Input.Keys.D
+    val Z = Input.Keys.Z   // 폭탄 사용
 }
