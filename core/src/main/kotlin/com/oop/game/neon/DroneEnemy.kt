@@ -29,7 +29,7 @@ class DroneEnemy(
 
     // 드론 이미지
     // resources 폴더 안에 enemy.png가 있어야 한다.
-    private val texture = Texture(Gdx.files.internal("enemy.png"))
+    private val texture = Texture(Gdx.files.internal("drone_enemy.png"))
 
     // 이동 방향
     // 1이면 오른쪽, -1이면 왼쪽
