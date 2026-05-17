@@ -41,6 +41,15 @@ class Player(
     // ── 최솔잎 구현 영역 ──
 
     override fun update(delta: Float) {
+        if (InputHandler.isKeyPressed(InputHandler.Left)) x-= speed*delta
+        if (InputHandler.isKeyPressed(InputHandler.RIGHT)) x += speed * delta
+        if (InputHandler.isKeyPressed(InputHandler.UP)) y += speed * delta
+        if (InputHandler.isKeyPressed(InputHandler.DOWN)) y -= speed * delta
+        if (InputHandler.isKeyPressed(InputHandler.Q)) {
+            attacktime = 2f
+            shoot()
+        }
+        if (InputHandler.isKeyPressed(InputHandler.Z)) {//폭탄}
         // TODO: 이동 (화살표 키)
         // TODO: 발사 (Space) → NeonWorld 에 Bullet 추가 요청 방법은 별도 협의
         // TODO: 폭탄 (Z 키) → useBomb() 호출
@@ -73,6 +82,13 @@ class Player(
     /** 회복 아이템 획득 시 NeonWorld 가 호출. maxHp 초과 불가. */
     fun heal() {
         if (hp < maxHp) hp += 1
+    }
+
+    //bullet 사용 추가
+    fun shoot(){
+        val bulletStratX = this.x
+        val bulletStartY = this.y
+        
     }
 
     /**
