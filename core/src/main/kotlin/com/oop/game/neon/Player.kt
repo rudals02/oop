@@ -27,6 +27,8 @@ class Player(
     var hp: Int = maxHp
         private set
 
+    val bullets = mutableListOf<Bullet>()
+
     var bombs: Int = 3
         private set
 
@@ -34,6 +36,8 @@ class Player(
 
     // 무적 시간 (피격 후 1.5초)
     private var invincibleTimer = 0f
+    private val attackspeed = 0.5f
+    private var cooltime = 0f//공속 추가
     val isInvincible: Boolean get() = invincibleTimer > 0f
 
     private val texture = Texture(Gdx.files.internal("player1.png"))
@@ -45,10 +49,16 @@ class Player(
         if (InputHandler.isKeyPressed(InputHandler.RIGHT)) x += speed * delta
         if (InputHandler.isKeyPressed(InputHandler.UP)) y += speed * delta
         if (InputHandler.isKeyPressed(InputHandler.DOWN)) y -= speed * delta
-        if (InputHandler.isKeyPressed(InputHandler.Q)) {
-            attacktime = 2f
+
+        if (cooltime > 0f){
+            cooltime -= delta
+        }//쿨타임 시간을 잼
+        
+        if (InputHandler.isKeyPressed(InputHandler.Space) && cooltime <= 0f ){ // space + cooltime = 0
             shoot()
+            cooltime = attackspeed// 쿨타임 초시계를 다시 1초로 세팅
         }
+        
         if (InputHandler.isKeyPressed(InputHandler.Z)) {//폭탄}
         // TODO: 발사 (Space) → NeonWorld 에 Bullet 추가 요청 방법은 별도 협의
         // TODO: 폭탄 (Z 키) → useBomb() 호출
@@ -56,6 +66,7 @@ class Player(
         if (invincibleTimer > 0f) invincibleTimer -= delta
         x = x.coerceIn(0f, worldWidth - width)
         y = y.coerceIn(0f, worldHeight - height)
+        bullets.forEach{it.upsate(dealta, worldHeight)}
     }
 
     override fun draw(batch: SpriteBatch) {
@@ -87,7 +98,7 @@ class Player(
     fun shoot(){
         val bulletStratX = this.x
         val bulletStartY = this.y
-        
+        bullets.add(Bullet(bulletStartX, bulletStartY))
     }
 
     /**
