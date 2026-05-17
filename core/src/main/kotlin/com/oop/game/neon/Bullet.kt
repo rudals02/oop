@@ -18,10 +18,10 @@ class Bullet(
     x: Float,
     y: Float,
     private val worldHeight: Float,
-    val damage: Int = 1
+    private val damage: Int = 1
 ) : GameObject(x, y, 8f, 16f) {
 
-    private val speed = 400f
+    private val speed = 600f
     private var alive = true
 
     private val texture = Texture(Gdx.files.internal("player.png")) // TODO: 총알 이미지로 교체
@@ -31,7 +31,7 @@ class Bullet(
         if (y > worldHeight) alive = false
     }
 
-    override fun draw(batch: SpriteBatch) {
+    override fun draw(batch: SpriteBatch, texture: Texture) {
         batch.draw(texture, x, y, width, height)
     }
 
