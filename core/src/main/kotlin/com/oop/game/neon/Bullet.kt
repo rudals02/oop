@@ -31,7 +31,7 @@ class Bullet(
         if (y > worldHeight) alive = false
     }
 
-    override fun draw(batch: SpriteBatch, texture: Texture) {
+    override fun draw(batch: SpriteBatch) {
         batch.draw(texture, x, y, width, height)
     }
 
