@@ -36,7 +36,7 @@ class Player(
     private var invincibleTimer = 0f
     val isInvincible: Boolean get() = invincibleTimer > 0f
 
-    private val texture = Texture(Gdx.files.internal("player.png"))
+    private val texture = Texture(Gdx.files.internal("player1.png"))
 
     // ── 최솔잎 구현 영역 ──
 
@@ -50,7 +50,6 @@ class Player(
             shoot()
         }
         if (InputHandler.isKeyPressed(InputHandler.Z)) {//폭탄}
-        // TODO: 이동 (화살표 키)
         // TODO: 발사 (Space) → NeonWorld 에 Bullet 추가 요청 방법은 별도 협의
         // TODO: 폭탄 (Z 키) → useBomb() 호출
         // TODO: 무적 타이머 감소
