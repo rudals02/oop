@@ -1,7 +1,7 @@
 package com.oop.game
 
 import com.badlogic.gdx.Game
-import com.oop.game.example.ExampleWorld
+import com.oop.game.neon.NeonWorld
 
 /**
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -56,11 +56,9 @@ class OopGame : Game() {
      *  GameWorld 가 LibGDX 의 Screen 인터페이스를 상속하므로 setScreen 인자로 넘길 수 있다.
      */
     override fun create() {
-        val firstWorld = ExampleWorld(
+        val firstWorld = NeonWorld(
             screenWidth = screenWidth.toFloat(),
-            screenHeight = screenHeight.toFloat(),
-            worldWidth = worldWidth.toFloat(),
-            worldHeight = worldHeight.toFloat()
+            screenHeight = screenHeight.toFloat()
         )
         setScreen(firstWorld)   // 부모 Game 이 제공하는 메서드
     }
