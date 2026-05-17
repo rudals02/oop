@@ -24,7 +24,7 @@ class Bullet(
     private val speed = 600f
     private var alive = true
 
-    private val texture = Texture(Gdx.files.internal("player.png")) // TODO: 총알 이미지로 교체
+    private val texture = Texture(Gdx.files.internal("bullet.png"))
 
     override fun update(delta: Float) {
         y += speed * delta
