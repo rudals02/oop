@@ -96,7 +96,7 @@ class Player(
 
     /** HP 가 0 이하이면 true. NeonWorld 가 GAME_OVER 전환 판정에 사용. */
     fun isDead(): Boolean {
-        hp <= 0 || isAlive() == false // hp가 0보다 작거나, isalive 가 false면 isDead
+        return hp <= 0 || isAlive() == false
     }
 
     /** 회복 아이템 획득 시 NeonWorld 가 호출. maxHp 초과 불가. */
