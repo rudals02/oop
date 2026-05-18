@@ -26,6 +26,9 @@ class Player(
     val maxHp: Int = 3
     var hp: Int = maxHp
         private set
+    private var Alivestate = true //현재 살아있는지 추가
+    override fun isAlive(): Boolean{ //neonworld 의 isAlive 함수 override
+        return hp > 0 && Alivestate}
 
     val bullets = mutableListOf<Bullet>()
 
@@ -79,13 +82,22 @@ class Player(
 
     /** 적 또는 Fireball 과 충돌 시 NeonWorld 가 호출. 무적 중이면 무시. */
     fun takeDamage() {
+        if (isAlive() == false) return
         if (isInvincible) return
         hp -= 1
         invincibleTimer = 1.5f
+
+        if (hp<= 0) //hp 없음 추가
+        hp=0
+        Alivestate = false
+        println("GAME OVER")
+        
     }
 
     /** HP 가 0 이하이면 true. NeonWorld 가 GAME_OVER 전환 판정에 사용. */
-    fun isDead(): Boolean = hp <= 0
+    fun isDead(): Boolean {
+        hp <= 0 || isAlive() == false // hp가 0보다 작거나, isalive 가 false면 isDead
+    }
 
     /** 회복 아이템 획득 시 NeonWorld 가 호출. maxHp 초과 불가. */
     fun heal() {
