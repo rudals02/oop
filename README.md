@@ -70,18 +70,29 @@ oop-game/
 ├── core/                                     플랫폼 독립 게임 코드
 │   └── src/main/
 │       ├── kotlin/com/oop/game/
-│       │   ├── GameObject.kt                  모든 게임 객체의 추상 부모
-│       │   ├── GameWorld.kt                   게임 월드(=한 장면)의 추상 부모
-│       │   ├── InputHandler.kt                키 입력 래퍼
 │       │   ├── OopGame.kt                     LibGDX Game 상속, 첫 월드 띄움
-│       │   └── example/
-│       │       ├── ExamplePlayer.kt           삼각형 플레이어 (화살표 키)
-│       │       ├── ExampleEnemy.kt            사각형 적 (자동 왕복)
-│       │       └── ExampleWorld.kt            데모 게임 월드
+│       │   ├── base/                          베이스 클래스 (직접 수정 불필요)
+│       │   │   ├── GameObject.kt              모든 게임 객체의 추상 부모
+│       │   │   ├── GameWorld.kt               게임 월드(=한 장면)의 추상 부모
+│       │   │   └── InputHandler.kt            키 입력 래퍼
+│       │   └── game/                          실제 게임 코드
+│       │       ├── Enemy.kt                   모든 적의 추상 부모 (HP, 점수, 속도)
+│       │       ├── DroneEnemy.kt              드론 적 (좌우 왕복)
+│       │       ├── RushEnemy.kt               돌진 적 (빠른 왕복 + 수직 진동)
+│       │       ├── BossEnemy.kt               보스 적 (사인파 이동)
+│       │       ├── Player.kt                  플레이어 (이동, 발사, 피격)
+│       │       ├── Bullet.kt                  플레이어 총알
+│       │       ├── Fireball.kt                보스 발사체
+│       │       └── MainWorld.kt               메인 게임 월드
 │       └── resources/
-│           ├── player.png                     30x30 플레이어 이미지
-│           ├── enemy.png                      40x40 적 이미지
-│           └── tile.png                       64x64 배경 타일
+│           ├── player1.png                    플레이어 이미지
+│           ├── enemy.png                      드론 적 이미지
+│           ├── drone_enemy.png                드론 적 이미지 (예비)
+│           ├── rush_enemy.png                 돌진 적 이미지
+│           ├── boss_enemy.png                 보스 이미지
+│           ├── bullet.png                     총알 이미지
+│           ├── tile.png                       타일 이미지
+│           └── background.png                 배경 이미지
 └── desktop/                                  데스크톱 전용 런처
     └── src/main/kotlin/com/oop/game/desktop/
         └── DesktopLauncher.kt                 main() 진입점
@@ -89,19 +100,15 @@ oop-game/
 
 ---
 
-## 6. 자기 게임 만들기
-
-뼈대를 변경하지 않고도 다음만 수정하면 자기 게임이 된다:
+## 6. 코드 수정 가이드
 
 | 어떤 것을 바꾸려면? | 어디 파일을? |
 |---|---|
-| 창/월드 크기 | `OopGame.kt` 의 `screenWidth/Height`, `worldWidth/Height` |
-| 시작 화면 | `OopGame.kt` 의 `create()` 안에서 다른 GameWorld 자식을 생성 |
-| 게임 로직 | `ExampleWorld.kt` 를 참고해 자기만의 `class MyWorld : GameWorld(...)` 작성 |
-| 새 캐릭터·적·총알 | `ExamplePlayer.kt` / `ExampleEnemy.kt` 를 참고해 `class XXX : GameObject(...)` 작성 |
-| 이미지 | `core/src/main/resources/` 에 PNG 추가 → `Texture(Gdx.files.internal("xxx.png"))` |
-
-`example/` 폴더 안의 파일은 통째로 복사해서 자기 이름으로 바꾸고 내용을 채워가면 된다.
+| 창/월드 크기 | `OopGame.kt` 의 `screenWidth/Height` |
+| 게임 로직·충돌 처리 | `game/MainWorld.kt` |
+| 플레이어 이동·발사·피격 | `game/Player.kt` |
+| 적 추가 | `game/Enemy.kt` 를 상속해 새 클래스 작성 후 `MainWorld` 에 등록 |
+| 이미지 교체 | `core/src/main/resources/` 에 PNG 추가 → `Texture(Gdx.files.internal("파일명.png"))` |
 
 ---
 
