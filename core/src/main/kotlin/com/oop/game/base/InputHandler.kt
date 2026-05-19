@@ -1,4 +1,4 @@
-package com.oop.game
+package com.oop.game.base
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
@@ -28,25 +28,14 @@ import com.badlogic.gdx.Input
  */
 object InputHandler {
 
-    /**
-     * 키가 현재 '눌려 있는 중' 인지 — 꾹 누르고 있으면 매 프레임 true.
-     *   이동(← → ↑ ↓) 처럼 '누르는 동안 계속' 일어나야 할 동작에 사용.
-     */
     fun isKeyPressed(key: Int): Boolean {
         return Gdx.input.isKeyPressed(key)
     }
 
-    /**
-     * 키가 '이번 프레임에 막 눌렸는지' — 꾹 눌러도 첫 프레임에만 true.
-     *   총알 발사, 메뉴 선택처럼 '한 번만' 실행되어야 할 동작에 사용.
-     */
     fun isKeyJustPressed(key: Int): Boolean {
         return Gdx.input.isKeyJustPressed(key)
     }
 
-    // 자주 쓰는 키 상수를 짧은 이름으로 재노출.
-    //   원본은 Input.Keys.LEFT 처럼 길어서 자주 쓸수록 번거롭다.
-    //   필요하면 Input.Keys.XXX 에서 다른 키를 직접 import 해서 써도 된다.
     val LEFT = Input.Keys.LEFT
     val RIGHT = Input.Keys.RIGHT
     val UP = Input.Keys.UP
@@ -57,5 +46,5 @@ object InputHandler {
     val A = Input.Keys.A
     val S = Input.Keys.S
     val D = Input.Keys.D
-    val Z = Input.Keys.Z   // 폭탄 사용
+    val Z = Input.Keys.Z
 }

@@ -1,4 +1,4 @@
-package com.oop.game
+package com.oop.game.base
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.ScreenAdapter

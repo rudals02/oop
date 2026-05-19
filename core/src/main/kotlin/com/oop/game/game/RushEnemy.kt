@@ -1,9 +1,9 @@
-package com.oop.game.example
+package com.oop.game.game
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.oop.game.GameObject
+import com.oop.game.base.GameObject
 
 /**
  * 돌진 적 — 빠른 속도로 좌우를 왕복하며, 수직으로도 천천히 진동.

@@ -1,17 +1,17 @@
-package com.oop.game.neon
+package com.oop.game.game
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.oop.game.GameObject
+import com.oop.game.base.GameObject
 
 /**
  * 플레이어가 발사하는 총알.
  *
  * 담당: 최솔잎 (이동, 제거 조건 구현)
- * 사용: 설재우 (NeonWorld 에서 damage 를 enemy.takeDamage() 에 전달)
+ * 사용: 설재우 (MainWorld 에서 damage 를 enemy.takeDamage() 에 전달)
  *
- * NeonWorld 와의 약속 (변경 금지):
+ * MainWorld 와의 약속 (변경 금지):
  *   damage, isAlive()
  */
 class Bullet(
@@ -35,10 +35,8 @@ class Bullet(
         batch.draw(texture, x, y, width, height)
     }
 
-    // 화면 밖으로 나가거나 적에게 맞으면 false → NeonWorld 의 removeDead() 가 정리
     override fun isAlive(): Boolean = alive
 
-    /** 적에게 맞았을 때 NeonWorld 가 호출해서 총알을 제거. */
     fun kill() { alive = false }
 
     override fun dispose() {

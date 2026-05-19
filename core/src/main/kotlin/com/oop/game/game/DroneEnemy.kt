@@ -1,4 +1,4 @@
-package com.oop.game.neon
+package com.oop.game.game
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
@@ -26,16 +26,9 @@ class DroneEnemy(
     speed = 120f
 ) {
 
-    // 드론 이미지
-    private val texture = Texture(Gdx.files.internal("enemy.png"))
-
-    // 이동 방향
-    // 1이면 오른쪽, -1이면 왼쪽
+    private val texture = Texture(Gdx.files.internal("drone_enemy.png"))
     private var direction = 1f
 
-    /**
-     * 매 프레임마다 드론을 좌우로 이동시킨다.
-     */
     override fun update(delta: Float) {
         x += speed * direction * delta
 
@@ -50,16 +43,10 @@ class DroneEnemy(
         }
     }
 
-    /**
-     * 드론 이미지를 화면에 그린다.
-     */
     override fun draw(batch: SpriteBatch) {
         batch.draw(texture, x, y, width, height)
     }
 
-    /**
-     * 이미지 자원 정리.
-     */
     override fun dispose() {
         texture.dispose()
     }

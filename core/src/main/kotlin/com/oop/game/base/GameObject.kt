@@ -1,4 +1,4 @@
-package com.oop.game
+package com.oop.game.base
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
