@@ -87,10 +87,11 @@ class Player(
         hp -= 1
         invincibleTimer = 1.5f
 
-        if (hp<= 0) //hp 없음 추가
-        hp=0
-        Alivestate = false
-        println("GAME OVER")
+        if (hp <= 0) {
+            hp = 0
+            Alivestate = false
+            println("GAME OVER")
+        }
         
     }
 
