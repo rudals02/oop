@@ -18,7 +18,7 @@ class Bullet(
     x: Float,
     y: Float,
     private val worldHeight: Float,
-    private val damage: Int = 1
+    val damage: Int = 1
 ) : GameObject(x, y, 8f, 16f) {
 
     private val speed = 600f

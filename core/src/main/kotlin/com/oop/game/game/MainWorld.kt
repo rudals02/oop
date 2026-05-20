@@ -61,7 +61,7 @@ class MainWorld(
             for (enemy in enemies) {
                 if (!enemy.isDead() && bullet.isAlive() && bullet.collidesWith(enemy)) {
                     bullet.kill()
-                    enemy.takeDamage(1)
+                    enemy.takeDamage(bullet.damage)
                     bulletsToKill.add(bullet)
                     if (enemy.isDead()) enemiesToKill.add(enemy)
                 }
