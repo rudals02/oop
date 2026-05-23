@@ -31,8 +31,9 @@ class Player(
     }
 
     val bullets = mutableListOf<Bullet>()
+    val bombProjectiles = mutableListOf<BombProjectile>()
 
-    var bombs: Int = 3
+    var bombs: Int = 0
         private set
 
     private val speed = 200f
@@ -79,10 +80,6 @@ class Player(
             cooltime = attackspeed
         }
 
-        if (InputHandler.isKeyPressed(InputHandler.Z)) {
-            useBomb()
-        }
-
         if (invincibleTimer > 0f) {
             invincibleTimer -= delta
             if (invincibleTimer <= 0f) {
@@ -92,7 +89,8 @@ class Player(
         }
         x = x.coerceIn(0f, worldWidth - width)
         y = y.coerceIn(0f, worldHeight - height)
-        bullets.forEach { it.update(delta) }//플레이어가 발사한 모든 총알 리스트 순회, 각각의 총알 위치 업뎃
+        bullets.forEach { it.update(delta) }
+        bombProjectiles.forEach { it.update(delta) }
     }
 
     override fun draw(batch: SpriteBatch) {
@@ -136,6 +134,13 @@ class Player(
     fun useBomb(): Boolean {
         if (bombs <= 0) return false
         bombs -= 1
+        val bombX = x + width / 2f - 12f
+        val bombY = y + height
+        bombProjectiles.add(BombProjectile(bombX, bombY, worldHeight))
         return true
+    }
+
+    fun addBomb() {
+        if (bombs < 3) bombs += 1
     }
 }
