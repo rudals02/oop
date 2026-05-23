@@ -43,11 +43,33 @@ class Player(
     val isInvincible: Boolean get() = invincibleTimer > 0f
 
     private val texture = Texture(Gdx.files.internal("player1.png"))
+    private val texture_hurt = Texture(Gdx.files.internal("player_hurt.png"))
+    private val texture1 = Texture(Gdx.files.internal("player2.png"))
+    private var currentTexture = texture
+
+    private var animationTimer = 0f
+    private val animationSpeed = 0.2f
+    //private var currentFrame = 1
+
 
     override fun update(delta: Float) {
         if (InputHandler.isKeyPressed(InputHandler.LEFT)) x -= speed * delta
         if (InputHandler.isKeyPressed(InputHandler.RIGHT)) x += speed * delta
-        if (InputHandler.isKeyPressed(InputHandler.UP)) y += speed * delta
+        if (InputHandler.isKeyPressed(InputHandler.UP)) {
+            y += speed * delta
+            if (!isInvincible){
+                animationTimer += delta
+                if (animationTimer >= animationSpeed){
+                    animationTimer = 0f
+                    currentTexture = if (currentTexture == texture) {
+                        texture1
+                    } else{
+                        texture
+                    }
+                }
+            }
+        }else{animationTimer = 0f }
+
         if (InputHandler.isKeyPressed(InputHandler.DOWN)) y -= speed * delta
 
         if (cooltime > 0f) cooltime -= delta
@@ -61,18 +83,26 @@ class Player(
             useBomb()
         }
 
-        if (invincibleTimer > 0f) invincibleTimer -= delta
+        if (invincibleTimer > 0f) {
+            invincibleTimer -= delta
+            if (invincibleTimer <= 0f) {
+                invincibleTimer = 0f
+                currentTexture = texture
+            }
+        }
         x = x.coerceIn(0f, worldWidth - width)
         y = y.coerceIn(0f, worldHeight - height)
-        bullets.forEach { it.update(delta) }
+        bullets.forEach { it.update(delta) }//플레이어가 발사한 모든 총알 리스트 순회, 각각의 총알 위치 업뎃
     }
 
     override fun draw(batch: SpriteBatch) {
-        batch.draw(texture, x, y, width, height)
+        batch.draw(currentTexture, x, y, width, height)
     }
 
     override fun dispose() {
         texture.dispose()
+        texture1.dispose()
+        texture_hurt.dispose()
     }
 
     fun takeDamage() {
@@ -80,6 +110,7 @@ class Player(
         if (isInvincible) return
         hp -= 1
         invincibleTimer = 1.5f
+        currentTexture = texture_hurt
 
         if (hp <= 0) {
             hp = 0
