@@ -18,6 +18,7 @@ class Bullet(
     x: Float,
     y: Float,
     private val worldHeight: Float,
+    val isDown: Boolean = false,
     val damage: Int = 1
 ) : GameObject(x, y, 8f, 16f) {
 
@@ -27,15 +28,29 @@ class Bullet(
     private val texture = Texture(Gdx.files.internal("bullet.png"))
 
     override fun update(delta: Float) {
-        y += speed * delta
-        if (y > worldHeight) alive = false
+        if (isDown) {
+            y -= speed * delta//아래 전진 추가
+        } else { y += speed * delta }//위로 전진
+
+        if (isDown){
+            if (y + height <0f) alive = false//바닥 뚫고 나가면 죽음
+        } else {
+            if ( y > worldHeight) alive = false//천장 뚫고 나가면 죽음
+        }
+
     }
 
     override fun draw(batch: SpriteBatch) {
         batch.draw(texture, x, y, width, height)
     }
 
-    override fun isAlive(): Boolean = alive
+    override fun isAlive(): Boolean {
+        return if (isDown) {
+            y + height > 0f
+        }else{
+            y in 0f ..worldHeight
+        }
+    }
 
     fun kill() { alive = false }
 

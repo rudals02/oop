@@ -46,11 +46,12 @@ class Player(
     private val texture = Texture(Gdx.files.internal("player1.png"))
     private val texture_hurt = Texture(Gdx.files.internal("player_hurt.png"))
     private val texture1 = Texture(Gdx.files.internal("player2.png"))
+    private val texture2 = Texture(Gdx.files.internal("player3.png"))
     private var currentTexture = texture
 
     private var animationTimer = 0f
     private val animationSpeed = 0.2f
-    //private var currentFrame = 1
+    private var currentFrame = 1
 
 
     override fun update(delta: Float) {
@@ -62,14 +63,16 @@ class Player(
                 animationTimer += delta
                 if (animationTimer >= animationSpeed){
                     animationTimer = 0f
-                    currentTexture = if (currentTexture == texture) {
-                        texture1
-                    } else{
-                        texture
-                    }
+                    currentFrame = if (currentFrame == 1) 2 else 1
                 }
-            }
-        }else{animationTimer = 0f }
+                    currentTexture = if (currentFrame == 1)
+                        texture1 else texture2}
+                    } else{
+                        animationTimer = 0f
+            currentFrame =1
+                    }
+
+
 
         if (InputHandler.isKeyPressed(InputHandler.DOWN)) y -= speed * delta
 
@@ -77,6 +80,11 @@ class Player(
 
         if (InputHandler.isKeyPressed(InputHandler.SPACE) && cooltime <= 0f) {
             shoot()
+            cooltime = attackspeed
+        }
+
+        if (InputHandler.isKeyPressed(InputHandler.Z) && cooltime <= 0f) {
+            shootDown()
             cooltime = attackspeed
         }
 
@@ -91,6 +99,7 @@ class Player(
         y = y.coerceIn(0f, worldHeight - height)
         bullets.forEach { it.update(delta) }
         bombProjectiles.forEach { it.update(delta) }
+
     }
 
     override fun draw(batch: SpriteBatch) {
@@ -100,6 +109,7 @@ class Player(
     override fun dispose() {
         texture.dispose()
         texture1.dispose()
+        texture2.dispose()
         texture_hurt.dispose()
     }
 
@@ -129,6 +139,12 @@ class Player(
         val bulletStartX = this.x + width / 2 - 4f
         val bulletStartY = this.y + height
         bullets.add(Bullet(bulletStartX, bulletStartY, worldHeight))
+    }
+
+    fun shootDown(){
+        val bulletStartX = this.x + width / 2 - 4f
+        val bulletStartY = this.y - 16f
+        bullets.add(Bullet(bulletStartX, bulletStartY, worldHeight, isDown=true))
     }
 
     fun useBomb(): Boolean {
