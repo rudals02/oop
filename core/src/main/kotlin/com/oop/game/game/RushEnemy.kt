@@ -3,14 +3,7 @@ package com.oop.game.game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import kotlin.math.sin
 
-/**
- * 돌진 적.
- *
- * DroneEnemy보다 체력과 점수가 높고,
- * 좌우로 빠르게 움직이면서 위아래로 조금 흔들린다.
- */
 class RushEnemy(
     x: Float,
     y: Float,
@@ -23,29 +16,40 @@ class RushEnemy(
     height = 45f,
     initialHp = 7,
     score = 300,
-    speed = 220f
+    speed = 330f
 ) {
 
     private val texture = Texture(Gdx.files.internal("rush_enemy.png"))
 
-    private var dirX = 1f
-    private var time = 0f
-    private val baseY = y
+    private var dirX = if (Math.random() < 0.5) -1f else 1f
+    private var dirY = if (Math.random() < 0.5) -1f else 1f
+
+    private val minY = 70f
+    private val maxY = 560f
 
     override fun update(delta: Float) {
-        time += delta
-
-        x += speed * dirX * delta
+        x += dirX * speed * delta
+        y += dirY * speed * delta
 
         if (x <= minX) {
             x = minX
             dirX = 1f
-        } else if (x + width >= maxX) {
+        }
+
+        if (x + width >= maxX) {
             x = maxX - width
             dirX = -1f
         }
 
-        y = baseY + sin(time * 2f) * 60f
+        if (y <= minY) {
+            y = minY
+            dirY = 1f
+        }
+
+        if (y + height >= maxY) {
+            y = maxY - height
+            dirY = -1f
+        }
     }
 
     override fun draw(batch: SpriteBatch) {

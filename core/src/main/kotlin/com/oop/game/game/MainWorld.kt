@@ -21,7 +21,13 @@ class MainWorld(
 
     private val fireballs = mutableListOf<Fireball>()
     private val effects = mutableListOf<HitEffect>()
+    private val enemyBullets = mutableListOf<EnemyBullet>()
+
     private var boss: BossEnemy? = null
+
+    private var rushSpawnTimer = 0f
+    private var rushSpawnCount = 0
+    private val rushSpawnMax = 7
 
     private val player = Player(
         x = screenWidth / 2f - 24f,
@@ -65,11 +71,8 @@ class MainWorld(
     }
 
     private fun spawnStage2() {
-        repeat(7) {
-            val x = (Math.random() * (screenWidth - 60f)).toFloat()
-            val y = screenHeight - 150f - (Math.random() * 220f).toFloat()
-            spawnRush(x, y)
-        }
+        rushSpawnTimer = 0f
+        rushSpawnCount = 0
     }
 
     private fun spawnStage3() {
@@ -160,6 +163,20 @@ class MainWorld(
     private fun updatePlaying(delta: Float) {
         updateAllObjects(delta)
 
+        if (stage == 2 && rushSpawnCount < rushSpawnMax) {
+            rushSpawnTimer += delta
+
+            if (rushSpawnTimer >= 0.7f) {
+                rushSpawnTimer = 0f
+                rushSpawnCount++
+
+                val x = (Math.random() * (screenWidth - 60f)).toFloat()
+                val y = screenHeight - 150f - (Math.random() * 220f).toFloat()
+
+                spawnRush(x, y)
+            }
+        }
+
         val enemiesToKill = mutableListOf<Enemy>()
 
         for (bullet in player.bullets) {
@@ -184,6 +201,8 @@ class MainWorld(
                 if (!enemy.isDead() && bomb.isAlive() && bomb.collidesWith(enemy)) {
                     bomb.kill()
                     enemy.takeDamage(bomb.damage)
+
+                    effects.add(HitEffect(enemy.x, enemy.y))
 
                     if (enemy.isDead()) {
                         enemiesToKill.add(enemy)
@@ -212,7 +231,16 @@ class MainWorld(
             }
         }
 
+        for (enemy in enemies) {
+            if (enemy is DroneEnemy && !enemy.isDead()) {
+                if (enemy.canShoot(delta)) {
+                    enemyBullets.add(enemy.shoot())
+                }
+            }
+        }
+
         fireballs.forEach { it.update(delta) }
+        enemyBullets.forEach { it.update(delta) }
 
         for (fireball in fireballs) {
             if (fireball.isAlive() && player.collidesWith(fireball)) {
@@ -223,7 +251,17 @@ class MainWorld(
             }
         }
 
+        for (enemyBullet in enemyBullets) {
+            if (enemyBullet.isAlive() && player.collidesWith(enemyBullet)) {
+                if (player.takeDamage()) {
+                    effects.add(HitEffect(player.x, player.y))
+                }
+                enemyBullet.kill()
+            }
+        }
+
         fireballs.removeAll { !it.isAlive() }
+        enemyBullets.removeAll { !it.isAlive() }
 
         for (enemy in enemies) {
             if (!enemy.isDead() && player.collidesWith(enemy)) {
@@ -265,7 +303,10 @@ class MainWorld(
             state = GameState.GAME_OVER
         }
 
-        if (enemies.isEmpty()) {
+        if (
+            enemies.isEmpty() &&
+            !(stage == 2 && rushSpawnCount < rushSpawnMax)
+        ) {
             state = GameState.STAGE_CLEAR
             transitionTimer = 0f
         }
@@ -299,6 +340,10 @@ class MainWorld(
             if (fireball.isAlive()) fireball.draw(batch)
         }
 
+        for (enemyBullet in enemyBullets) {
+            if (enemyBullet.isAlive()) enemyBullet.draw(batch)
+        }
+
         for (item in items) {
             if (item.isAlive()) item.draw(batch)
         }
@@ -306,6 +351,8 @@ class MainWorld(
         for (effect in effects) {
             if (effect.isAlive()) effect.draw(batch)
         }
+
+        drawEnemyHp()
 
         batch.end()
 
@@ -333,6 +380,24 @@ class MainWorld(
         if (state == GameState.GAME_OVER) {
             drawTextOnScreen("GAME OVER", screenWidth / 2f - 70f, screenHeight / 2f, Color.RED, 2f)
         }
+    }
+
+    private fun drawEnemyHp() {
+        font.data.setScale(0.75f)
+        font.color = Color.RED
+
+        for (enemy in enemies) {
+            if (!enemy.isDead()) {
+                font.draw(
+                    batch,
+                    "${enemy.hp}/${enemy.maxHp}",
+                    enemy.x,
+                    enemy.y + enemy.height + 14f
+                )
+            }
+        }
+
+        font.color = Color.WHITE
     }
 
     private fun drawHud() {
@@ -386,5 +451,6 @@ class MainWorld(
         fireballs.forEach { it.dispose() }
         effects.forEach { it.dispose() }
         items.forEach { it.dispose() }
+        enemyBullets.forEach { it.dispose() }
     }
 }

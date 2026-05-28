@@ -29,6 +29,9 @@ class DroneEnemy(
     private val texture = Texture(Gdx.files.internal("drone_enemy.png"))
     private var direction = 1f
 
+    private var shootTimer = 0f
+    private val shootInterval = 2.0f
+
     override fun update(delta: Float) {
         x += speed * direction * delta
 
@@ -41,6 +44,19 @@ class DroneEnemy(
             x = maxX - width
             direction = -1f
         }
+    }
+
+    fun canShoot(delta: Float): Boolean {
+        shootTimer += delta
+        if (shootTimer >= shootInterval) {
+            shootTimer = 0f
+            return true
+        }
+        return false
+    }
+
+    fun shoot(): EnemyBullet {
+        return EnemyBullet(x + width / 2f - 6f, y - 20f)
     }
 
     override fun draw(batch: SpriteBatch) {

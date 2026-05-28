@@ -18,6 +18,8 @@ abstract class Enemy(
     val speed: Float
 ) : GameObject(x, y, width, height) {
 
+    val maxHp: Int = initialHp
+
     var hp: Int = initialHp
         protected set
 
@@ -26,11 +28,7 @@ abstract class Enemy(
         if (hp < 0) hp = 0
     }
 
-    fun isDead(): Boolean {
-        return hp <= 0
-    }
+    fun isDead(): Boolean = hp <= 0
 
-    override fun isAlive(): Boolean {
-        return !isDead()
-    }
+    override fun isAlive(): Boolean = !isDead()
 }
