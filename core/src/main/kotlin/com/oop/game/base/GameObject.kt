@@ -17,7 +17,7 @@ abstract class GameObject(
 
     fun getBounds(): Rectangle = Rectangle(x, y, width, height)
 
-    fun collidesWith(other: GameObject): Boolean = getBounds().overlaps(other.getBounds())
+    open fun collidesWith(other: GameObject): Boolean = getBounds().overlaps(other.getBounds())
 
     open fun dispose() {}
 }

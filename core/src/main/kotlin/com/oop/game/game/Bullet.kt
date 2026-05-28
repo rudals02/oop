@@ -44,13 +44,7 @@ class Bullet(
         batch.draw(texture, x, y, width, height)
     }
 
-    override fun isAlive(): Boolean {
-        return if (isDown) {
-            y + height > 0f
-        }else{
-            y in 0f ..worldHeight
-        }
-    }
+    override fun isAlive(): Boolean = alive
 
     fun kill() { alive = false }
 

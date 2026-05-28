@@ -83,10 +83,11 @@ class Player(
             cooltime = attackspeed
         }
 
-        if (InputHandler.isKeyPressed(InputHandler.Z) && cooltime <= 0f) {
+        if (InputHandler.isKeyPressed(InputHandler.ESCAPE) && cooltime <= 0f) {
             shootDown()
             cooltime = attackspeed
         }
+
 
         if (invincibleTimer > 0f) {
             invincibleTimer -= delta
@@ -99,6 +100,7 @@ class Player(
         y = y.coerceIn(0f, worldHeight - height)
         bullets.forEach { it.update(delta) }
         bombProjectiles.forEach { it.update(delta) }
+        bombProjectiles.removeAll { !it.isAlive() }
 
     }
 

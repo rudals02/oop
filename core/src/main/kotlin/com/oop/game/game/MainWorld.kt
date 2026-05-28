@@ -115,6 +115,7 @@ class MainWorld(
         updateAllObjects(delta)
 
         val enemiesToKill = mutableListOf<Enemy>()
+        val enemiesKilledByBullet = mutableListOf<Enemy>()
 
         for (bullet in player.bullets) {
             for (enemy in enemies) {
@@ -129,14 +130,15 @@ class MainWorld(
         if (InputHandler.isKeyJustPressed(InputHandler.Z)) player.useBomb()
 
         for (bomb in player.bombProjectiles) {
-            for (enemy in enemies) {
-                if (!enemy.isDead() && bomb.isAlive() && bomb.collidesWith(enemy)) {
-                    bomb.kill()
-                    enemy.takeDamage(bomb.damage)
-                    if (enemy.isDead()) enemiesToKill.add(enemy)
+                for (enemy in enemies) {
+                    if (!enemy.isDead() && bomb.isAlive() && bomb.collidesWith(enemy)) {
+                        bomb.kill()
+                        enemy.takeDamage(bomb.damage)
+                        if(enemy.isDead()) enemiesToKill.add(enemy)
+                    }
                 }
             }
-        }
+
         player.bombProjectiles.removeAll { !it.isAlive() }
 
         for (enemy in enemiesToKill) {
