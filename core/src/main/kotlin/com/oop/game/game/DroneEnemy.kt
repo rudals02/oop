@@ -21,7 +21,7 @@ class DroneEnemy(
     y = y,
     width = 48f,
     height = 42f,
-    initialHp = 1,
+    initialHp = 5,
     score = 100,
     speed = 120f
 ) {

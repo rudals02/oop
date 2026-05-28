@@ -12,18 +12,41 @@ import kotlin.math.sin
 class BossEnemy(
     x: Float,
     y: Float
-) : GameObject(x, y, 90f, 100f) {
-
+) : Enemy(
+    x = x,
+    y = y,
+    width = 90f,
+    height = 100f,
+    initialHp = 50,
+    score = 3000,
+    speed = 80f
+) {
     private val texture = Texture(Gdx.files.internal("boss_enemy.png"))
 
     private val centerX = x
     private val amplitude = 160f
-    private val speed = 0.8f  // 라디안/초
+    private val moveSpeed = 0.8f
     private var time = 0f
+
+    var fireballTimer = 0f
+    val fireballInterval = 1.2f
 
     override fun update(delta: Float) {
         time += delta
-        x = centerX + sin(time * speed) * amplitude
+        x = centerX + sin(time * moveSpeed) * amplitude
+    }
+
+    fun canShoot(delta: Float): Boolean {
+        fireballTimer += delta
+        if (fireballTimer >= fireballInterval) {
+            fireballTimer = 0f
+            return true
+        }
+        return false
+    }
+
+    fun shootFireball(): Fireball {
+        return Fireball(x + width / 2f - 28f, y - 56f)
     }
 
     override fun draw(batch: SpriteBatch) {

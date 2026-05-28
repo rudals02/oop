@@ -5,25 +5,19 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.oop.game.base.GameObject
 
-/**
- * 보스가 발사하는 파이어볼 클래스.
- *
- * 위에서 아래 방향으로 떨어진다.
- * Player와 충돌하면 MainWorld에서 player.takeDamage()를 호출하면 된다.
- */
-class Fireball(
+class HitEffect(
     x: Float,
-    y: Float,
-    val damage: Int = 1
-) : GameObject(x, y, 56f, 56f) {
+    y: Float
+) : GameObject(x, y, 64f, 64f) {
 
-    private val speed = 260f
-    private var alive = true
     private val texture = Texture(Gdx.files.internal("blast.png"))
+    private var timer = 0f
+    private val duration = 0.25f
+    private var alive = true
 
     override fun update(delta: Float) {
-        y -= speed * delta
-        if (y + height < 0f) alive = false
+        timer += delta
+        if (timer >= duration) alive = false
     }
 
     override fun draw(batch: SpriteBatch) {
@@ -31,10 +25,6 @@ class Fireball(
     }
 
     override fun isAlive(): Boolean = alive
-
-    fun kill() {
-        alive = false
-    }
 
     override fun dispose() {
         texture.dispose()

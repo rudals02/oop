@@ -115,9 +115,10 @@ class Player(
         texture_hurt.dispose()
     }
 
-    fun takeDamage() {
-        if (isAlive() == false) return
-        if (isInvincible) return
+    fun takeDamage(): Boolean {
+        if (!isAlive()) return false
+        if (isInvincible) return false
+
         hp -= 1
         invincibleTimer = 1.5f
         currentTexture = texture_hurt
@@ -127,6 +128,8 @@ class Player(
             Alivestate = false
             println("GAME OVER")
         }
+
+        return true
     }
 
     fun isDead(): Boolean {

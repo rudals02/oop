@@ -21,7 +21,7 @@ class RushEnemy(
     y = y,
     width = 60f,
     height = 45f,
-    initialHp = 3,
+    initialHp = 7,
     score = 300,
     speed = 220f
 ) {
