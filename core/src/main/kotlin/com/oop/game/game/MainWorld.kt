@@ -98,12 +98,6 @@ class MainWorld(
         }
     }
 
-    private fun spawnRandomItem() {
-        val x = (Math.random() * (screenWidth - 32f)).toFloat()
-        val type = if (Math.random() < 0.5) ItemType.HEAL else ItemType.BOMB
-        items.add(Item(x, screenHeight, type))
-    }
-
     private fun spawnRush(x: Float, y: Float) {
         val rush = RushEnemy(x, y, minX = 0f, maxX = screenWidth)
         enemies.add(rush)
@@ -163,79 +157,61 @@ class MainWorld(
     private fun updatePlaying(delta: Float) {
         updateAllObjects(delta)
 
-        if (stage == 2 && rushSpawnCount < rushSpawnMax) {
-            rushSpawnTimer += delta
+        val rushStillSpawning = stage == 2 && rushSpawnCount < rushSpawnMax
 
+        if (rushStillSpawning) {
+            rushSpawnTimer += delta
             if (rushSpawnTimer >= 0.7f) {
                 rushSpawnTimer = 0f
                 rushSpawnCount++
-
-                val x = (Math.random() * (screenWidth - 60f)).toFloat()
-                val y = screenHeight - 150f - (Math.random() * 220f).toFloat()
-
-                spawnRush(x, y)
+                spawnRush(
+                    x = (Math.random() * (screenWidth - 60f)).toFloat(),
+                    y = screenHeight - 150f - (Math.random() * 220f).toFloat()
+                )
             }
         }
 
-        val enemiesToKill = mutableListOf<Enemy>()
+        val enemiesToKill = mutableSetOf<Enemy>()
 
         for (bullet in player.bullets) {
             for (enemy in enemies) {
                 if (!enemy.isDead() && bullet.isAlive() && bullet.collidesWith(enemy)) {
                     bullet.kill()
                     enemy.takeDamage(bullet.damage)
-
-                    if (enemy.isDead()) {
-                        enemiesToKill.add(enemy)
-                    }
+                    if (enemy.isDead()) enemiesToKill.add(enemy)
                 }
             }
         }
 
-        if (InputHandler.isKeyJustPressed(InputHandler.Z)) {
-            player.useBomb()
-        }
+        if (InputHandler.isKeyJustPressed(InputHandler.Z)) player.useBomb()
 
         for (bomb in player.bombProjectiles) {
             for (enemy in enemies) {
                 if (!enemy.isDead() && bomb.isAlive() && bomb.collidesWith(enemy)) {
                     bomb.kill()
                     enemy.takeDamage(bomb.damage)
-
                     effects.add(HitEffect(enemy.x, enemy.y))
-
-                    if (enemy.isDead()) {
-                        enemiesToKill.add(enemy)
-                    }
+                    if (enemy.isDead()) enemiesToKill.add(enemy)
                 }
             }
         }
 
         player.bombProjectiles.removeAll { !it.isAlive() }
 
-        for (enemy in enemiesToKill.distinct()) {
+        for (enemy in enemiesToKill) {
             score += enemy.score
             enemies.remove(enemy)
             remove(enemy)
-
-            if (enemy == boss) {
-                boss = null
-            }
+            if (enemy == boss) boss = null
         }
 
         player.bullets.removeAll { !it.isAlive() }
 
-        boss?.let {
-            if (!it.isDead() && it.canShoot(delta)) {
-                fireballs.add(it.shootFireball())
-            }
-        }
+        boss?.let { if (!it.isDead() && it.canShoot(delta)) fireballs.add(it.shootFireball()) }
 
         for (enemy in enemies) {
-            if (enemy is DroneEnemy && !enemy.isDead()) {
-                if (enemy.canShoot(delta)) {
-                    enemyBullets.add(enemy.shoot())
-                }
+            if (enemy is DroneEnemy && !enemy.isDead() && enemy.canShoot(delta)) {
+                enemyBullets.add(enemy.shoot())
             }
         }
 
@@ -244,18 +220,14 @@ class MainWorld(
 
         for (fireball in fireballs) {
             if (fireball.isAlive() && player.collidesWith(fireball)) {
-                if (player.takeDamage()) {
-                    effects.add(HitEffect(player.x, player.y))
-                }
+                if (player.takeDamage()) effects.add(HitEffect(player.x, player.y))
                 fireball.kill()
             }
         }
 
         for (enemyBullet in enemyBullets) {
             if (enemyBullet.isAlive() && player.collidesWith(enemyBullet)) {
-                if (player.takeDamage()) {
-                    effects.add(HitEffect(player.x, player.y))
-                }
+                if (player.takeDamage()) effects.add(HitEffect(player.x, player.y))
                 enemyBullet.kill()
             }
         }
@@ -265,29 +237,25 @@ class MainWorld(
 
         for (enemy in enemies) {
             if (!enemy.isDead() && player.collidesWith(enemy)) {
-                if (player.takeDamage()) {
-                    effects.add(HitEffect(player.x, player.y))
-                }
+                if (player.takeDamage()) effects.add(HitEffect(player.x, player.y))
             }
         }
 
         items.forEach { it.update(delta) }
 
         itemSpawnTimer += delta
-
         if (itemSpawnTimer >= itemSpawnInterval) {
             itemSpawnTimer = 0f
-            spawnRandomItem()
+            val x = (Math.random() * (screenWidth - 32f)).toFloat()
+            val type = if (Math.random() < 0.5) ItemType.HEAL else ItemType.BOMB
+            items.add(Item(x, screenHeight, type))
         }
 
-        val itemsToCollect = items.filter { player.collidesWith(it) }
-
-        for (item in itemsToCollect) {
+        items.filter { player.collidesWith(it) }.forEach { item ->
             when (item.type) {
                 ItemType.HEAL -> player.heal()
                 ItemType.BOMB -> player.addBomb()
             }
-
             item.collect()
         }
 
@@ -297,23 +265,17 @@ class MainWorld(
         effects.removeAll { !it.isAlive() }
 
         timeLeft -= delta
-
         if (timeLeft <= 0f) {
             timeLeft = 0f
             state = GameState.GAME_OVER
         }
 
-        if (
-            enemies.isEmpty() &&
-            !(stage == 2 && rushSpawnCount < rushSpawnMax)
-        ) {
+        if (enemies.isEmpty() && !rushStillSpawning) {
             state = GameState.STAGE_CLEAR
             transitionTimer = 0f
         }
 
-        if (player.isDead()) {
-            state = GameState.GAME_OVER
-        }
+        if (player.isDead()) state = GameState.GAME_OVER
 
         removeDead()
     }
