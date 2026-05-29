@@ -1,6 +1,7 @@
 package com.oop.game.game
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.oop.game.base.GameObject
@@ -21,7 +22,19 @@ class BossEnemy(
     score = 3000,
     speed = 80f
 ) {
-    private val texture = Texture(Gdx.files.internal("boss_enemy.png"))
+    private val texture: Texture = run {
+        val pixmap = Pixmap(Gdx.files.internal("boss_enemy.png"))
+        val bgColor = pixmap.getPixel(0, 0)
+        pixmap.blending = Pixmap.Blending.None
+        for (px in 0 until pixmap.width) {
+            for (py in 0 until pixmap.height) {
+                if (pixmap.getPixel(px, py) == bgColor) {
+                    pixmap.drawPixel(px, py, 0)
+                }
+            }
+        }
+        Texture(pixmap).also { pixmap.dispose() }
+    }
 
     private val centerX = x
     private val amplitude = 160f
