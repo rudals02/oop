@@ -49,13 +49,14 @@ class MainWorld(
 
     private val bgStage1 = Texture(Gdx.files.internal("stage1.png"))
     private val bgStage2 = Texture(Gdx.files.internal("stage2.png"))
+    private val bgStage3 = Texture(Gdx.files.internal("stage3.png"))
 
     private val hudHpTex = Texture(Gdx.files.internal("hp.png"))
     private val hudBombTex = Texture(Gdx.files.internal("bomb_background.png"))
     private val hudScoreTex = Texture(Gdx.files.internal("score.png"))
     private val hudTimerTex = Texture(Gdx.files.internal("timer.png"))
 
-    private var timeLeft = 90f
+    private var timeLeft = 150f
 
     init {
         add(player)
@@ -281,7 +282,11 @@ class MainWorld(
     }
 
     override fun drawBackground(batch: SpriteBatch) {
-        val bg = if (stage >= 2) bgStage2 else bgStage1
+        val bg = when {
+            stage >= 3 -> bgStage3
+            stage >= 2 -> bgStage2
+            else -> bgStage1
+        }
         batch.draw(bg, 0f, 0f, screenWidth, screenHeight)
     }
 
@@ -404,6 +409,7 @@ class MainWorld(
 
         bgStage1.dispose()
         bgStage2.dispose()
+        bgStage3.dispose()
 
         hudHpTex.dispose()
         hudBombTex.dispose()

@@ -9,11 +9,11 @@ class EnemyBullet(
     x: Float,
     y: Float,
     val damage: Int = 1
-) : GameObject(x, y, 12f, 20f) {
+) : GameObject(x, y, 10f, 15f) {
 
     private val speed = 300f
     private var alive = true
-    private val texture = Texture(Gdx.files.internal("bullet.png"))
+    private val texture = Texture(Gdx.files.internal("drone.png"))
 
     override fun update(delta: Float) {
         y -= speed * delta
