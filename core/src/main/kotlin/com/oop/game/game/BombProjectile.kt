@@ -53,7 +53,7 @@ class BombProjectile(
     }
 
     override fun collidesWith(other: GameObject): Boolean {
-        //  이미 한 번 때린 적이면 범위 안에 있어도 충돌 안 했다하는 문제 처리
+        // 이미 한 번 때린 적이면 범위 안에 있어도 충돌 안 했다하는 문제 처리
         if (hitEnemies.contains(other)) {
             return false
         }

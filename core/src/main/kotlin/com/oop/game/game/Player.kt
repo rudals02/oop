@@ -94,7 +94,7 @@ class Player(
             cooltime = attackSpeed
         }
 
-        if (InputHandler.isKeyPressed(InputHandler.ESCAPE) && cooltime <= 0f) {
+        if (InputHandler.isKeyPressed(InputHandler.S) && cooltime <= 0f) {
             shootDown()
             cooltime = attackSpeed
         }
