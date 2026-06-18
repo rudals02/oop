@@ -14,12 +14,12 @@ import com.oop.game.base.GameObject
 class Fireball(
     x: Float,
     y: Float,
-    val damage: Int = 1
+    val damage: Int = 2
 ) : GameObject(x, y, 56f, 56f) {
 
     private val speed = 260f
     private var alive = true
-    private val texture = Texture(Gdx.files.internal("blast.png"))
+    private val texture = Texture(Gdx.files.internal("fireball.png")) //이미지 수정하였습니다
 
     override fun update(delta: Float) {
         y -= speed * delta

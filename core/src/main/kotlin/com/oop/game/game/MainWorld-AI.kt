@@ -181,6 +181,8 @@ class MainWorldAI(
     private val fireballs    = mutableListOf<Fireball>()
     private val effects      = mutableListOf<HitEffect>()
     private val enemyBullets = mutableListOf<EnemyBullet>()
+    private val playerBullets = mutableListOf<Bullet>() //playerbullet도 여기 추가 하였습니다
+    private val playerBombs = mutableListOf<BombProjectile>()
     internal var boss: BossEnemy? = null
 
     // [6] internal 가시성: 같은 모듈(StageStrategy 구현체)에서 접근 가능
