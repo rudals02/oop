@@ -12,7 +12,7 @@ class Bullet(
     y: Float,
     private val worldHeight: Float,
     private val worldWidth: Float,
-    val direction: BulletDirection = BulletDirection.UP,
+    val direction: BulletDirection = BulletDirection.UP,//기본값
     val damage: Int = 1
 ) : GameObject(x, y, 8f, 16f) {
 

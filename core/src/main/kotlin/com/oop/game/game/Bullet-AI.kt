@@ -19,7 +19,7 @@ class BulletAI(
     startY: Float,
     private val worldHeight: Float,
     private val worldWidth: Float,
-    private val direction: BulletDirection
+    private val direction: BulletDirectionAI
 ) : GameObject(startX, startY, 12f, 12f) { // 총알 크기는 12x12
 
     private val texture = Texture(Gdx.files.internal("bullet.png"))
@@ -31,10 +31,10 @@ class BulletAI(
     override fun update(delta: Float) {
         // [3] 자신이 부여받은 방향(direction)에 따라 스스로 이동합니다.
         when (direction) {
-            BulletDirection.UP -> y += speed * delta
-            BulletDirection.DOWN -> y -= speed * delta
-            BulletDirection.LEFT -> x -= speed * delta
-            BulletDirection.RIGHT -> x += speed * delta
+            BulletDirectionAI.UP -> y += speed * delta
+            BulletDirectionAI.DOWN -> y -= speed * delta
+            BulletDirectionAI.LEFT -> x -= speed * delta
+            BulletDirectionAI.RIGHT -> x += speed * delta
         }
     }
 
