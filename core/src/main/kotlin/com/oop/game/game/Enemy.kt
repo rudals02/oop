@@ -8,7 +8,7 @@ import com.oop.game.base.GameObject
  * 적들은 공통적으로 체력, 점수, 속도를 가진다.
  * DroneEnemy, RushEnemy, BossEnemy는 이 클래스를 상속해서 만든다.
  */
-abstract class Enemy(
+abstract class EnemyAI(
     x: Float,
     y: Float,
     width: Float,
