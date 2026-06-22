@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
  * 좌우로 왕복 이동하며, 일정 주기로 총알을 발사한다.
  * 발사 기능이 있으므로 Shooter를 구현한다.
  */
-class DroneEnemyAI(
+class DroneEnemy(
     x: Float,
     y: Float,
     private val minX: Float,

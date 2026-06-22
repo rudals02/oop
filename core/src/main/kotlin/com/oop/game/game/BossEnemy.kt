@@ -10,7 +10,7 @@ import kotlin.math.sin
  * 보스 적 — 크고 느리게 좌우로 사인파 이동하며 파이어볼을 발사한다.
  * 발사 기능이 있으므로 Shooter를 구현한다.
  */
-class BossEnemyAI(
+class BossEnemy(
     x: Float,
     y: Float
 ) : Enemy(

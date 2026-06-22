@@ -7,7 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import kotlin.math.sin
 
 /**
- * 보스 적 — 크고 느리게 좌우로 사인파 이동하며 파이어볼을 발사한다.
+ * 보스 적 — 크고 느리게 좌우로 사인파 이동.
+ * 발사 기능이 있으므로 Shooter를 구현한다.
  */
 class BossEnemyAI(
     x: Float,
@@ -20,10 +21,25 @@ class BossEnemyAI(
     initialHp = 50,
     score = 3000,
     speed = 80f
-) {
-    override val shootInterval = 1.2f
+), Shooter {
 
-    private val texture: Texture = loadTextureWithTransparentBackground("boss_enemy.png")
+    override val shootInterval = 1.2f
+    override var shootTimer = 0f
+    // canShoot()는 Shooter의 디폴트 메서드를 그대로 상속받아 씀
+
+    private val texture: Texture = run {
+        val pixmap = Pixmap(Gdx.files.internal("boss_enemy.png"))
+        val bgColor = pixmap.getPixel(0, 0)
+        pixmap.blending = Pixmap.Blending.None
+        for (px in 0 until pixmap.width) {
+            for (py in 0 until pixmap.height) {
+                if (pixmap.getPixel(px, py) == bgColor) {
+                    pixmap.drawPixel(px, py, 0)
+                }
+            }
+        }
+        Texture(pixmap).also { pixmap.dispose() }
+    }
 
     private val centerX = x
     private val amplitude = 160f
@@ -35,10 +51,9 @@ class BossEnemyAI(
         x = centerX + sin(time * moveSpeed) * amplitude
     }
 
-    /** 발사 타이밍이 되면 true. 부모의 공통 타이머 로직을 그대로 사용. */
-    fun canShoot(delta: Float): Boolean = tickShootTimer(delta)
-
-    fun shootFireball(): Fireball = Fireball(x + width / 2f - 28f, y - 56f)
+    fun shootFireball(): Fireball {
+        return Fireball(x + width / 2f - 28f, y - 56f)
+    }
 
     override fun draw(batch: SpriteBatch) {
         batch.draw(texture, x, y, width, height)
@@ -46,20 +61,5 @@ class BossEnemyAI(
 
     override fun dispose() {
         texture.dispose()
-    }
-
-    /** (0,0) 픽셀 색을 배경으로 간주하고 투명 처리한 텍스처를 로드한다. */
-    private fun loadTextureWithTransparentBackground(path: String): Texture {
-        val pixmap = Pixmap(Gdx.files.internal(path))
-        val bgColor = pixmap.getPixel(0, 0)
-        pixmap.blending = Pixmap.Blending.None
-        for (px in 0 until pixmap.width) {
-            for (py in 0 until pixmap.height) {
-                if (pixmap.getPixel(px, py) == bgColor) {
-                    pixmap.drawPixel(px, py, 0)
-                }
-            }
-        }
-        return Texture(pixmap).also { pixmap.dispose() }
     }
 }
