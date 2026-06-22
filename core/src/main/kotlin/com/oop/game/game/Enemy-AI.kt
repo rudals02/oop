@@ -5,10 +5,12 @@ import com.oop.game.base.GameObject
 /**
  * 모든 적의 공통 부모 클래스.
  *
- * 체력, 점수, 속도 외에 발사 쿨다운 로직도 공통으로 끌어올렸다.
- * (DroneEnemy, BossEnemy가 동일한 타이머 패턴을 각자 구현하고 있었음)
+ * 체력, 점수, 속도만 공통으로 가진다.
+ * 발사 가능 여부는 Shooter 인터페이스로 분리했다.
+ * (RushEnemy처럼 발사 안 하는 적이 불필요한 발사 로직을
+ *  상속받지 않도록 하기 위함 — LSP 위반 방지)
  */
-abstract class Enemy(
+abstract class EnemyAI(
     x: Float,
     y: Float,
     width: Float,
@@ -23,9 +25,6 @@ abstract class Enemy(
     var hp: Int = initialHp
         protected set
 
-    private var shootTimer = 0f
-    protected open val shootInterval: Float = Float.MAX_VALUE // 발사 안 하는 적은 무한대로 둠
-
     open fun takeDamage(damage: Int) {
         hp = (hp - damage).coerceAtLeast(0)
     }
@@ -33,14 +32,4 @@ abstract class Enemy(
     fun isDead(): Boolean = hp <= 0
 
     override fun isAlive(): Boolean = !isDead()
-
-    /** 매 프레임 호출. 쿨다운이 찼으면 true를 반환하고 타이머를 리셋한다. */
-    protected fun tickShootTimer(delta: Float): Boolean {
-        shootTimer += delta
-        if (shootTimer >= shootInterval) {
-            shootTimer = 0f
-            return true
-        }
-        return false
-    }
 }
